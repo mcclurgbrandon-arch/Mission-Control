@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Engineering",
+    "path": "engineering/Engineering Unit Maps"
+  },
+  {
+    "name": "Chemistry",
+    "path": "chemistry"
+  },
+  {
+    "name": "Physics",
+    "path": "physics"
+  },
+  {
+    "name": "Lesson Plans",
+    "path": "lesson-plans"
+  },
+  {
+    "name": "Morning Brief",
+    "path": "scripts/morning_brief.py"
+  },
+  {
+    "name": "GradingPal",
+    "path": ""
+  },
+  {
+    "name": "Richland Hills Watch",
+    "path": "physics/City_Council_memo.pdf"
+  },
+  {
+    "name": "Scripts",
+    "path": "scripts"
+  },
+  {
+    "name": "Repo",
+    "path": ""
+  }
+]

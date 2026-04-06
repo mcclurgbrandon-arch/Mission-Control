@@ -1,0 +1,76 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenClaw Mission Control</title>
+<style>body{font-family:system-ui,Arial;margin:0}#wrap{display:flex;height:100vh}aside{width:260px;background:#0b1626;color:#fff;padding:12px;box-sizing:border-box}main{flex:1;padding:16px;overflow:auto}h1{font-size:18px;margin:8px 0}a{color:#9ecbff;text-decoration:none}ul{list-style:none;padding:0}li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)}.card{background:#fff;padding:12px;border-radius:8px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,0.08)}.status{display:flex;gap:12px;align-items:center}.dot{width:12px;height:12px;border-radius:50%}.green{background:#2ecc71}.yellow{background:#f1c40f}.red{background:#e74c3c}.btn{background:#0b79d0;color:#fff;padding:8px 10px;border-radius:6px;border:none;cursor:pointer}</style>
+</head><body>
+<div id="wrap">
+<aside>
+<h1>Mission Control</h1>
+<div id="tools"></div>
+<hr style="border:none;border-top:1px solid rgba(255,255,255,0.08)">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="https://github.com/mcclurgbrandon-arch/Mission-Control" target="_blank">Repo</a></li>
+<li><a href="/DASHBOARD.html" target="_blank">Local Dashboard</a></li>
+<li><a href="/physics/City_Council_memo.pdf" target="_blank">Latest Council Memo (local)</a></li>
+</ul>
+</aside>
+<main>
+<div class="card">
+<div class="status"><div id="statusDot" class="dot"></div><div>
+<strong id="statusText">Loading status…</strong><br><small id="statusSince"></small>
+</div></div>
+</div>
+
+<div class="card"><h2>Active Task</h2>
+<div id="activeTask">No active task</div>
+<button class="btn" onclick="startTask()">Start sample task (log only)</button>
+</div>
+
+<div class="card"><h2>Memory (local only)</h2>
+<p>Memory is private to this host. Use the local interface to view.</p>
+<ul id="memlist"></ul>
+</div>
+
+<div class="card"><h2>Recent Artifacts</h2>
+<ul id="artifacts"></ul>
+</div>
+</main>
+</div>
+<script>
+async function loadTools(){
+  const r=await fetch('tools.json');
+  const t=await r.json();
+  const el=document.getElementById('tools');
+  el.innerHTML='<h3>Tools</h3><ul>'+(t.map(x=>'\n<li>'+x.name+'</li>').join(''))+'</ul>'
+}
+async function loadStatus(){
+  try{
+    const r=await fetch('agent_status.json');
+    const s=await r.json();
+    document.getElementById('statusText').textContent=s.status.toUpperCase();
+    document.getElementById('statusSince').textContent=s.since||'';
+    document.getElementById('activeTask').textContent=(s.task||'None');
+    const dot=document.getElementById('statusDot');
+    dot.className='dot '+(s.status=='working'?'green':'yellow');
+  }catch(e){console.log(e)}
+}
+async function loadMemory(){
+  try{
+    const r=await fetch('memory_index_local.json');
+    const m=await r.json();
+    const el=document.getElementById('memlist');
+    el.innerHTML=m.map(x=>'<li>'+x.file+': '+x.firstLine+'</li>').join('');
+  }catch(e){console.log(e)}
+}
+async function loadArtifacts(){
+  const list=['briefs/brief-2026-04-03.md','briefs/brief-2026-04-06.md','physics/City_Council_memo.pdf'];
+  document.getElementById('artifacts').innerHTML=list.map(x=>'<li><a href="'+x+'" target="_blank">'+x+'</a></li>').join('');
+}
+function startTask(){
+  fetch('/scripts/update_status.py?cmd=start&msg=Manual%20task',{method:'GET'}).catch(()=>{});
+  alert('Logged start (safe demo)');
+}
+loadTools(); loadStatus(); loadMemory(); loadArtifacts(); setInterval(loadStatus,15000);
+</script>
+</body></html>
