@@ -1,0 +1,11 @@
+{
+  "status": "working",
+  "task": "Parsing Richland Hills meetings",
+  "since": "2026-04-05T19:52:09.459743",
+  "log": [
+    {
+      "time": "2026-04-05T19:52:09.459743",
+      "msg": "START Parsing Richland Hills meetings"
+    }
+  ]
+}

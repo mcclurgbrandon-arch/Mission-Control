@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>TARS Agent Dashboard</title>
+<meta http-equiv="refresh" content="30">
+<style>body{font-family:system-ui,Arial;margin:20px}h1{font-size:20px}pre{background:#f6f6f6;padding:10px;border-radius:6px}</style>
+</head><body>
+<h1>TARS — Agent Activity Dashboard</h1>
+<div id="status"></div>
+<h2>Recent Log</h2>
+<pre id="log">Loading...</pre>
+<script>
+async function load(){
+  const r=await fetch('agent_status.json?'+Date.now());
+  const j=await r.json();
+  document.getElementById('status').innerHTML=`<strong>Status:</strong> ${j.status} <br><strong>Task:</strong> ${j.task || '-'} <br><strong>Since:</strong> ${j.since || '-'} `;
+  document.getElementById('log').textContent = (j.log||[]).slice(-30).map(l=>l.time+' - '+l.msg).join('\n');
+}
+load(); setInterval(load,30000);
+</script>
+</body></html>
